@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+    <style>
+        #drop_zone {
+            width: 100%;
+            height: 200px;
+            border: 2px dashed #aaa;
+            text-align: center;
+            padding-top: 75px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div id="drop_zone">Drag and drop files here</div>
+
+    <script>
+        var dropZone = document.getElementById('drop_zone');
+
+        dropZone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            dropZone.style.backgroundColor = '#ddd';
+        });
+
+        dropZone.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            dropZone.style.backgroundColor = '';
+        });
+
+        dropZone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            dropZone.style.backgroundColor = '';
+            
+            var files = e.dataTransfer.files;
+            var formData = new FormData();
+
+            for (var i = 0; i < files.length; i++) {
+                formData.append('files[]', files[i]);
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/upload', true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    console.log('File(s) uploaded successfully');
+                } else {
+                    console.log('Error uploading file(s)');
+                }
+            };
+            xhr.send(formData);
+        });
+    </script>
+</body>
+</html>
